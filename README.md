@@ -1,101 +1,88 @@
-# bot-detection
-# Twitter Bot Detection Tool
+# Signal — Twitter/X Bot Detector
 
-## 📌 Overview
-This project is a **Real-Time Twitter Bot Detection Tool** that uses **Machine Learning** to identify whether a Twitter account is a bot or a human. The tool fetches tweets using **Twitter API v1.1**, processes the account's activity, and predicts bot behavior using an ML model. It comes with a **FastAPI backend** and a **Streamlit-based GUI**.
+A machine learning tool that estimates whether a Twitter/X account is a bot,
+based on public account-level signals (followers, following, activity,
+profile completeness) — no live Twitter API access required.
 
-## 🚀 Features
-- Fetches Twitter data in **real-time**.
-- Uses **Machine Learning (RandomForestClassifier)** for bot detection.
-- Provides a **REST API** via FastAPI.
-- User-friendly **Streamlit GUI**.
-- **Deployed on Render** for 24/7 availability.
+> **Why no live API?** X (formerly Twitter) discontinued free-tier read
+> access to its API in 2026. Rather than depend on paid API access, this
+> tool works from account stats you enter manually (all of which are
+> visible on any public profile page), and runs them through a model
+> trained on a real labeled dataset of ~2,800 Twitter accounts.
 
-## 🏗️ Project Structure
+## Live demo
+
+- Frontend: _add your deployed Vercel URL here_
+- Backend API: _add your deployed Render URL here_
+
+## Architecture
+
 ```
-Twitter-Bot-Detection/
-├── twitter_fetch.py   # Fetch tweets from Twitter API
-├── ml_model.py        # Machine Learning model for bot detection
-├── main.py            # FastAPI backend
-├── app.py             # Streamlit GUI
-├── requirements.txt   # Dependencies
-├── README.md          # Project documentation
+bot-detection/
+├── backend/            FastAPI + scikit-learn
+│   ├── main.py         API endpoints (/api/check, /api/history)
+│   ├── features.py     Feature engineering + explanation logic
+│   ├── train_model.py  Model training script
+│   ├── data/            Training dataset (2,797 labeled accounts)
+│   └── model/           Saved trained model (bot_model.joblib)
+└── frontend/            React (Vite)
+    └── src/              Form, result gauge, history view
 ```
 
-## 🔧 Installation & Setup
-### 1️⃣ Clone the Repository
+## Model
+
+- **Algorithm:** Random Forest Classifier (scikit-learn)
+- **Dataset:** 2,797 labeled Twitter accounts (1,476 human / 1,321 bot),
+  with real features — followers, friends, favourites, statuses, verified
+  status, default profile flags.
+- **Engineered features:** followers-to-friends ratio, tweets-to-followers
+  (log-scaled reach), favourites-per-tweet, bio length, screen-name patterns.
+- **Test-set performance:**
+  - Accuracy: 91.3%
+  - Precision: 93.2%
+  - Recall: 87.9%
+  - ROC AUC: 97.2%
+
+Run `python train_model.py` inside `backend/` to retrain and see the full
+report, including per-feature importance.
+
+## Running locally
+
+### Backend
 ```bash
-git clone https://github.com/your-username/your-repo-name.git
-cd Twitter-Bot-Detection
-```
-
-### 2️⃣ Install Dependencies
-```bash
+cd backend
+python -m venv venv
+source venv/bin/activate      # venv\Scripts\activate on Windows
 pip install -r requirements.txt
+uvicorn main:app --reload
 ```
+API runs at `http://localhost:8000`. Interactive docs at `/docs`.
 
-### 3️⃣ Set Up Twitter API Keys
-1. Go to [Twitter Developer Portal](https://developer.twitter.com/en/portal/projects-and-apps)
-2. Create an **App** and get API keys
-3. Add them to `twitter_fetch.py`
-
-```python
-API_KEY = "your_api_key"
-API_SECRET_KEY = "your_api_secret"
-ACCESS_TOKEN = "your_access_token"
-ACCESS_SECRET = "your_access_secret"
-```
-
-### 4️⃣ Run the Backend API
+### Frontend
 ```bash
-uvicorn main:app --host 0.0.0.0 --port 10000
+cd frontend
+cp .env.example .env
+npm install
+npm run dev
 ```
+App runs at `http://localhost:5173`.
 
-### 5️⃣ Run the Streamlit UI
-```bash
-streamlit run app.py
-```
+## Deployment
 
-## 🎯 Usage
-- Open the **Streamlit UI** and enter a Twitter username.
-- The tool will fetch the account’s data, analyze it, and predict whether it's a **bot** or a **human**.
+**Backend (Render — free tier):**
+1. New Web Service → connect this repo, root directory `backend`
+2. Build command: `pip install -r requirements.txt`
+3. Start command: `uvicorn main:app --host 0.0.0.0 --port $PORT`
+4. Add environment variable `ALLOWED_ORIGINS` = your deployed frontend URL
 
-## 🌍 Deployment on Render
-### **1️⃣ Push Code to GitHub**
-```bash
-git init
-git add .
-git commit -m "Initial commit"
-git branch -M main
-git remote add origin https://github.com/your-username/your-repo-name.git
-git push -u origin main
-```
+**Frontend (Vercel):**
+1. Import this repo, root directory `frontend`
+2. Framework preset: Vite
+3. Add environment variable `VITE_API_URL` = your deployed backend URL
 
-### **2️⃣ Deploy FastAPI on Render**
-- Go to **Render.com** → New Web Service
-- Connect GitHub Repo
-- Start command: `uvicorn main:app --port 10000`
+## Tech stack
 
-### **3️⃣ Deploy Streamlit on Render**
-- Go to **Render.com** → New Web Service
-- Connect GitHub Repo
-- Start command: `streamlit run app.py --server.port 8501`
-
-## 🔥 Tech Stack
-- **Python** 🐍
-- **FastAPI** 🚀 (Backend API)
-- **Streamlit** 🎨 (GUI)
-- **Tweepy** 🐦 (Twitter API)
-- **Scikit-Learn** 🤖 (Machine Learning)
-- **Render** 🌐 (Deployment)
-
-## 💡 Future Enhancements
-✅ Improve ML model with **Deep Learning** (e.g., LSTMs).  
-✅ Add **Sentiment Analysis** to detect fake news bots.  
-✅ Optimize API calls to handle **real-time streaming**.
+Python, FastAPI, scikit-learn, pandas, SQLite · React (Vite) · Render + Vercel
 
 ---
-
-### 🛠 Developed by Dayasri K
-Got any suggestions? Feel free to **open an issue** or **contribute!** 😃
-
+Built by Dayasri K

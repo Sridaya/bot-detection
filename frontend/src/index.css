@@ -1,0 +1,78 @@
+:root {
+  --bg: #0c0f1a;
+  --surface: #141926;
+  --surface-alt: #1b2233;
+  --border: #262f42;
+  --text: #e9edf5;
+  --text-muted: #8892a6;
+  --signal: #7dd3fc;       /* clean signal — human */
+  --signal-dim: #38517a;
+  --flag: #fdba74;         /* flagged — bot */
+  --flag-dim: #7a5a38;
+  --danger: #f87171;
+
+  --font-display: 'Space Grotesk', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --font-body: 'Inter', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  background-image:
+    radial-gradient(circle at 15% 10%, rgba(125, 211, 252, 0.06), transparent 40%),
+    radial-gradient(circle at 85% 90%, rgba(253, 186, 116, 0.05), transparent 40%);
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+
+::selection {
+  background: var(--signal);
+  color: #0c0f1a;
+}
+
+a {
+  color: var(--signal);
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+input:focus-visible,
+button:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 2px;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 6px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
