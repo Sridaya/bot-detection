@@ -12,7 +12,7 @@ profile completeness) — no live Twitter API access required.
 
 ## Live demo
 
-- Frontend: _add your deployed Vercel URL here_
+- Frontend: https://bot-detection-beta.vercel.app
 - Backend API: _add your deployed Render URL here_
 
 ## Architecture
