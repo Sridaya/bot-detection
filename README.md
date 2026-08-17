@@ -10,11 +10,6 @@ profile completeness) — no live Twitter API access required.
 > visible on any public profile page), and runs them through a model
 > trained on a real labeled dataset of ~2,800 Twitter accounts.
 
-## Live demo
-
-- Frontend: https://bot-detection-beta.vercel.app
-- Backend API: _add your deployed Render URL here_
-
 ## Architecture
 
 ```
